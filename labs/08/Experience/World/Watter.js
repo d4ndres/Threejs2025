@@ -1,7 +1,7 @@
 import Experience from "../Experience";
 import World from "./World";
 import * as THREE from 'three'
-import RAPIER, { ColliderDesc } from '@dimforge/rapier3d';
+import RAPIER  from '@dimforge/rapier3d';
 
 class Particle {
 
@@ -11,11 +11,11 @@ class Particle {
         this.uid = Particle.id++
         this.world = World.getInstance()
         this.engineWorld = this.world.engineWorld
-        this.size = 0.5
+        this.size = 1 + (Math.random() * 2 - 1) * 0.5
         this.position = {
-            x: (Math.random() * 2 - 1) * 30,
-            y: (Math.random() * 2 - 1) * 30,
-            z: (Math.random() * 2 - 1) * 30,
+            x: (Math.random() * 2 - 1) * 20,
+            y: (Math.random() * 2 - 1) * 20,
+            z: (Math.random() * 2 - 1) * 20,
         }
 
         this.setVirtualBody()
@@ -33,7 +33,7 @@ class Particle {
         )
 
         this.collider = RAPIER.ColliderDesc
-            .ball(this.size*2)
+            .ball(this.size)
             .setRestitution(0.5)
 
         this.engineWorld.createCollider(
@@ -44,11 +44,12 @@ class Particle {
 
     setGraphicMesh() {
         this.mesh = new THREE.Mesh(
-            new THREE.SphereGeometry(1),
+            new THREE.SphereGeometry(this.size, 10, 10),
             new THREE.MeshStandardMaterial({
                 color: '#4395e2',
-                wireframe: true,
-                transparent: true,
+                metalness: 0.3,
+                roughness: 0.7
+                // transparent: true,
                 // opacity: 0.5
             })
         )
@@ -57,6 +58,16 @@ class Particle {
             this.position.y,
             this.position.z
         )
+
+        this.writeMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(this.size, 10, 10),
+            new THREE.MeshStandardMaterial({
+                color: '#e24843',
+                wireframe: true,
+            })
+        )
+
+        this.mesh.add(this.writeMesh)
     }
 
     update() {

@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import Watter from "./Watter";
 import Environment from "./Environment";
 import RAPIER from '@dimforge/rapier3d';
-
+import MouseBall from "./MouseBall";
 
 export default class World {
     static instance
@@ -26,6 +26,7 @@ export default class World {
         this.gravity = { x: 0.0, y: 0, z: 0.0 };
         this.engineWorld = new RAPIER.World(this.gravity);
         this.watter = new Watter()
+        this.mouseBall = new MouseBall()
 
         //Test
         const axesHelper = new THREE.AxesHelper()
